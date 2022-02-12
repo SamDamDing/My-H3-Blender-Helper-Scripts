@@ -1,7 +1,8 @@
 """
-This script is for generating a grid of cubes with seams and skies. The triangulation modifers alternative every other cube so the seams line up.
+This script is for generating a grid of cubes with seams and skies. The triangulation modifers alternate every other cube so the seams line up.
 Materials are created and applied to each cube. However, the perimeter cubes are not setup to be properly assigned materials unless the code is modified, which I haven't gotten around to yet.
-This generates a 7x7 grid of cubes with skies on the outside, a ground texture on the bottom, and a seam mat in between.
+This generates a 7x7 grid of cubes with skies on the outside, a ground texture on the bottom, and a seam mat in between. This code does not work for Halo 3, as the maximum amount of bsps connected to one is 2.
+Hopefully this will increase as more mod tools are released.
 """
 import bpy
 import bmesh
