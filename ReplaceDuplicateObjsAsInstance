@@ -1,0 +1,8 @@
+import bpy
+#Replaces any duplicate objects ending in .xxx with an instanced object, if possible.
+objs = bpy.data.objects
+for obj in bpy.data.objects:
+    part = obj.name.rpartition('.')
+    if part[2].isnumeric() and part[0] in objs:
+        print(obj.name)
+        obj.name = '%' + str(obj.name)
