@@ -9,7 +9,7 @@ import os
 #You can now have tool make bitmaps from those tiffs that will end up in your tags/objects/bitmaps/custom directory.
 #Export your blender file as an fbx
 #Use my fork of blader to generate shaders to your directory
-#Modify the default_directory variable in the "H3ShaderBitmapTool Modify and Run 3rd.py" script to the directory you have your blader generated shaders in and run it.
+#Modify the default_directory variable in the "H3ShaderBitmapToolModifyAndRunLast.py" script to the directory you have your blader generated shaders in and run it.
 #It'll probably fuck up a few of them because this script is a bit ass tbh. Like, it doesn't check for it duplicates. I'll probably get around to fixing it, but if that happens you'll have shaders with an invalid texture that looks red and rainbow.
 #Finally, you can import your ass and hopefully your textures will look right.
 
