@@ -6,12 +6,13 @@ file = open("sea.json", 'r') #This is a json you can get you ctrl+a and ctrl+c t
 json_data = json.load(file)
 
 def actorimporttranslate():
+        bpy.ops.object.select_all(action='DESELECT')
         bpy.ops.wm.collada_import(
         filepath = ObjPath,
         auto_connect = True,
         find_chains = True,
         fix_orientation = True)
-        
+
         bpy.ops.transform.translate(
         value=(posX, -posZ, posY), 
         orient_axis_ortho='X', 
@@ -29,65 +30,17 @@ def actorimporttranslate():
         use_proportional_connected=False, 
         use_proportional_projected=False, 
         release_confirm=True)
+        
+        bpy.ops.object.select_grouped(type='CHILDREN_RECURSIVE')
+        bpy.context.object.rotation_mode = 'QUATERNION'
+        bpy.context.object.rotation_quaternion[0] = rotW
+        bpy.context.object.rotation_quaternion[1] = rotX
+        bpy.context.object.rotation_quaternion[2] = rotY
+        bpy.context.object.rotation_quaternion[3] = rotZ
+
+        bpy.ops.object.select_all(action='DESELECT')
+        
         """
-        bpy.ops.transform.rotate(
-        value=rotX, 
-        orient_axis='X', 
-        orient_type='GLOBAL', 
-        orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), 
-        orient_matrix_type='GLOBAL', 
-        constraint_axis=(True, False, False), 
-        mirror=False, 
-        use_proportional_edit=False, 
-        proportional_edit_falloff='SMOOTH', 
-        proportional_size=1, 
-        use_proportional_connected=False, 
-        use_proportional_projected=False, 
-        release_confirm=True)
-        
-        bpy.ops.transform.rotate(
-        value=rotY, 
-        orient_axis='Y', 
-        orient_type='GLOBAL', 
-        orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), 
-        orient_matrix_type='GLOBAL', 
-        constraint_axis=(True, False, False), 
-        mirror=False, 
-        use_proportional_edit=False, 
-        proportional_edit_falloff='SMOOTH', 
-        proportional_size=1, 
-        use_proportional_connected=False, 
-        use_proportional_projected=False, 
-        release_confirm=True)
-        
-        bpy.ops.transform.rotate(
-        value=rotZ, 
-        orient_axis='Z', 
-        orient_type='GLOBAL', 
-        orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), 
-        orient_matrix_type='GLOBAL', 
-        constraint_axis=(True, False, False), 
-        mirror=False, 
-        use_proportional_edit=False, 
-        proportional_edit_falloff='SMOOTH', 
-        proportional_size=1, 
-        use_proportional_connected=False, 
-        use_proportional_projected=False, 
-        release_confirm=True)
-        
-        bpy.ops.transform.resize(
-        value=(scaleX, scaleY, scaleZ), 
-        orient_type='GLOBAL', 
-        orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), 
-        orient_matrix_type='GLOBAL', 
-        mirror=False, 
-        use_proportional_edit=False, 
-        proportional_edit_falloff='SMOOTH', 
-        proportional_size=1, 
-        use_proportional_connected=False, 
-        use_proportional_projected=False, 
-        release_confirm=True)
-        
         bpy.ops.transform.resize(value=(0.45, 0.45, 0.45), orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='GLOBAL', constraint_axis=(True, True, True), mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1, use_proportional_connected=False, use_proportional_projected=False, release_confirm=True)
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
@@ -112,13 +65,19 @@ for each in json_data:
         posY=each['Transform'].get('Position').get('Y')
         posZ=each['Transform'].get('Position').get('Z')
         #Prints Rotation
+        print("rotX")
         print(each['Transform'].get('Rotation').get('X'))
+        print("rotY")
         print(each['Transform'].get('Rotation').get('Y'))
+        print("rotZ")
         print(each['Transform'].get('Rotation').get('Z'))
+        print("rotW")
+        print(each['Transform'].get('Rotation').get('W'))
         #Sets the Rotation variable for import
         rotX=each['Transform'].get('Rotation').get('X')
         rotY=each['Transform'].get('Rotation').get('Y')
         rotZ=each['Transform'].get('Rotation').get('Z')
+        rotW=each['Transform'].get('Rotation').get('W')
         #Prints Local Scale
         print(each['Transform'].get('LocalScale').get('X'))
         print(each['Transform'].get('LocalScale').get('Y'))
