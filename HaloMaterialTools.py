@@ -13,8 +13,8 @@ from bpy_extras.io_utils import ExportHelper
 class MyAddonProperties(bpy.types.PropertyGroup):
     some_integer_prop = bpy.props.IntProperty()
     some_identifier: bpy.props.StringProperty(
-        #name='Directory',
-        description='H3EK Directory')
+        name='Directory',
+        description='Directory')
 
 class WMFileRemover(bpy.types.Operator):
     bl_idname = "wm.remove_file"
@@ -31,6 +31,7 @@ class WMFileRemover(bpy.types.Operator):
 class WMFileSelector(bpy.types.Operator, ExportHelper):
     bl_idname = "halomats.identifier_selector"
     bl_label = "some folder"
+    bl_description = 'Directory'
     filename_ext = ""
     def execute(self, context):
         fdir = self.properties.filepath
@@ -55,7 +56,7 @@ class EnableHaloMatProp(bpy.types.Operator):
 class renderOnly(bpy.types.Operator):
     bl_idname = 'halomats.renderonly'
     bl_label = 'Render Only'
-    bl_description = 'Makes the material render only'
+    bl_description = 'Makes the material Render Only'
     def execute(self, context):
         for object in bpy.context.selected_objects: 
             if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
@@ -70,7 +71,7 @@ class renderOnly(bpy.types.Operator):
 class TwoSided(bpy.types.Operator):
     bl_idname = 'halomats.twosided'
     bl_label = 'TwoSided'
-    bl_description = 'Makes the material TwoSided'
+    bl_description = 'Makes the material Two Sided'
     def execute(self, context):
         for object in bpy.context.selected_objects: 
             if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
@@ -101,7 +102,7 @@ class Transparent(bpy.types.Operator):
 class LargeCollideable(bpy.types.Operator):
     bl_idname = 'halomats.largecollideable'
     bl_label = 'LargeCollideable'
-    bl_description = 'Makes the material Large Collideable'
+    bl_description = 'Makes the material a Large Collideable'
     def execute(self, context):
         for object in bpy.context.selected_objects: 
             if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
@@ -131,7 +132,7 @@ class FogPlane(bpy.types.Operator):
 class Ladder(bpy.types.Operator):
     bl_idname = 'halomats.ladder'
     bl_label = 'ladder'
-    bl_description = 'Makes the material a Fog Plane'
+    bl_description = 'Makes the material a Ladder'
     def execute(self, context):
         for object in bpy.context.selected_objects: 
             if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
@@ -146,7 +147,7 @@ class Ladder(bpy.types.Operator):
 class collision_only(bpy.types.Operator):
     bl_idname = 'halomats.collision_only'
     bl_label = 'collision_only'
-    bl_description = 'Makes the material a Fog Plane'
+    bl_description = 'Makes the material Collision Only'
     def execute(self, context):
         for object in bpy.context.selected_objects: 
             if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
@@ -161,7 +162,7 @@ class collision_only(bpy.types.Operator):
 class breakable(bpy.types.Operator):
     bl_idname = 'halomats.breakable'
     bl_label = 'breakable'
-    bl_description = 'Makes the material a Fog Plane'
+    bl_description = 'Makes the material Breakable'
     def execute(self, context):
         for object in bpy.context.selected_objects: 
             if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
@@ -191,7 +192,7 @@ class ai_deafening(bpy.types.Operator):
 class portal_exact(bpy.types.Operator):
     bl_idname = 'halomats.portal_exact'
     bl_label = 'portal_exact'
-    bl_description = 'Makes the material a Fog Plane'
+    bl_description = 'Makes the material an Exact Portal'
     def execute(self, context):
         for object in bpy.context.selected_objects: 
             if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
@@ -241,7 +242,7 @@ class removeDupeMats(bpy.types.Operator):
 class ExportTexture(bpy.types.Operator):
     bl_idname = 'halomats.exporttexture'
     bl_label = 'Export Material Textures to tiff'
-    bl_description = 'Replaces any duplicate materials ending in .xxx with the original material, if available.'
+    bl_description = 'Export Material Textures to the directory in a TIFF format'
     def execute(self, context):
         scn = context.scene
         for obj in bpy.context.scene.objects:
@@ -273,33 +274,33 @@ class PANEL1(bpy.types.Panel):
         row.prop(scn.my_addon, 'some_identifier', text="")
         col.operator("halomats.identifier_selector", icon="FILE_FOLDER", text="Directory")
         row = col.row(align=True)
-        row.operator("halomats.enablehalomatprop", icon='MATSHADERBALL', text="Toggle Material Properties")
+        row.operator("halomats.enablehalomatprop", icon='SHADERFX', text="Toggle Material Properties")
         row = col.row(align=True)
-        row.operator("halomats.twosided", icon='MATSHADERBALL', text="Two-Sided")
+        row.operator("halomats.twosided", icon='MATERIAL', text="Two-Sided")
         row = col.row(align=True)
-        row.operator("halomats.transparent", icon='MATSHADERBALL', text="Transparent")
+        row.operator("halomats.transparent", icon='MATERIAL', text="Transparent")
         row = col.row(align=True)
-        row.operator("halomats.renderonly", icon='MATSHADERBALL', text="Render Only")
+        row.operator("halomats.renderonly", icon='MATERIAL', text="Render Only")
         row = col.row(align=True)
-        row.operator("halomats.largecollideable", icon='MATSHADERBALL', text="Large Collideable")
+        row.operator("halomats.largecollideable", icon='MATERIAL', text="Large Collideable")
         row = col.row(align=True)
-        row.operator("halomats.fogplane", icon='MATSHADERBALL', text="Fog Plane")
+        row.operator("halomats.fogplane", icon='MATERIAL', text="Fog Plane")
         row = col.row(align=True)
-        row.operator("halomats.ladder", icon='MATSHADERBALL', text="Ladder")
+        row.operator("halomats.ladder", icon='MATERIAL', text="Ladder")
         row = col.row(align=True)
-        row.operator("halomats.breakable", icon='MATSHADERBALL', text="Breakable")
+        row.operator("halomats.breakable", icon='MATERIAL', text="Breakable")
         row = col.row(align=True)
-        row.operator("halomats.ai_deafening", icon='MATSHADERBALL', text="AI Deafening")
+        row.operator("halomats.ai_deafening", icon='MATERIAL', text="AI Deafening")
         row = col.row(align=True)
-        row.operator("halomats.collision_only", icon='MATSHADERBALL', text="Collision Only")
+        row.operator("halomats.collision_only", icon='MATERIAL', text="Collision Only")
         row = col.row(align=True)
-        row.operator("halomats.portal_exact", icon='MATSHADERBALL', text="Exact Portal")
+        row.operator("halomats.portal_exact", icon='MATERIAL', text="Exact Portal")
         col = layout.column()
-        col.operator("halomats.removedupemats", icon='MATSHADERBALL', text="Remove Dupe Materials")
+        col.operator("halomats.removedupemats", icon='REMOVE', text="Remove Dupe Materials")
         col = layout.column()
-        col.operator("halomats.makedupesinstance", icon='MESH_GRID', text="Make Dupes Instances")
+        col.operator("halomats.makedupesinstance", icon='COLLECTION_NEW', text="Make Dupes Instances")
         col = layout.column()
-        col.operator("halomats.exporttexture", icon='MESH_GRID', text="Export Textures")
+        col.operator("halomats.exporttexture", icon='TEXTURE', text="Export Textures")
 
 def register():
     bpy.utils.register_class(PANEL1)
