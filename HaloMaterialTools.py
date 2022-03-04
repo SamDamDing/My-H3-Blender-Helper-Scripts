@@ -238,6 +238,26 @@ class removeDupeMats(bpy.types.Operator):
                                         ogimg=ogs.image.name
                                         if ogimg==imagename:
                                             s.material = ogmat
+class ExportTexture(bpy.types.Operator):
+    bl_idname = 'halomats.exporttexture'
+    bl_label = 'Export Material Textures to tiff'
+    bl_description = 'Replaces any duplicate materials ending in .xxx with the original material, if available.'
+    def execute(self, context):
+        scn = context.scene
+        for obj in bpy.context.scene.objects:
+            for s in obj.material_slots:
+                if s.material and s.material.use_nodes:
+                    for n in s.material.node_tree.nodes:
+                        if n.type == 'TEX_IMAGE':
+                            imagename=n.image.name
+                            imagename = imagename.rpartition('.')
+                            imagename = imagename[0]
+                            print(imagename)
+                            n.image.filepath_raw = str(scn.my_addon.some_identifier + str(imagename) + ".tif")
+                            print(n.image.filepath_raw)
+                            n.image.file_format = "TIFF"
+                            n.image.save()
+        return {"FINISHED"}
 
 class PANEL1(bpy.types.Panel):
     bl_idname = "WMFILEPANEL_PT_hello"
@@ -251,7 +271,7 @@ class PANEL1(bpy.types.Panel):
         col = layout.column()
         row = col.row(align=True)
         row.prop(scn.my_addon, 'some_identifier', text="")
-        col.operator("halomats.identifier_selector", icon="FILE_FOLDER", text="H3EK Directory")
+        col.operator("halomats.identifier_selector", icon="FILE_FOLDER", text="Directory")
         row = col.row(align=True)
         row.operator("halomats.enablehalomatprop", icon='MATSHADERBALL', text="Toggle Material Properties")
         row = col.row(align=True)
@@ -278,6 +298,8 @@ class PANEL1(bpy.types.Panel):
         col.operator("halomats.removedupemats", icon='MATSHADERBALL', text="Remove Dupe Materials")
         col = layout.column()
         col.operator("halomats.makedupesinstance", icon='MESH_GRID', text="Make Dupes Instances")
+        col = layout.column()
+        col.operator("halomats.exporttexture", icon='MESH_GRID', text="Export Textures")
 
 def register():
     bpy.utils.register_class(PANEL1)
@@ -298,6 +320,7 @@ def register():
     bpy.utils.register_class(EnableHaloMatProp)
     bpy.utils.register_class(makeDupesInstance)
     bpy.utils.register_class(removeDupeMats)
+    bpy.utils.register_class(ExportTexture)
     
 def unregister():
     bpy.utils.unregister_class(PANEL1)
@@ -317,6 +340,7 @@ def unregister():
     bpy.utils.unregister_class(EnableHaloMatProp)
     bpy.utils.unregister_class(makeDupesInstance)
     bpy.utils.unregister_class(removeDupeMats)
+    bpy.utils.unregister_class(ExportTexture)
     del bpy.types.Scene.my_addon
 
 if __name__ == "__main__" :
