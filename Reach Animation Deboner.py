@@ -62,20 +62,22 @@ class deboner(bpy.types.Operator):
     def execute(self, context):
         badbones = ["pedestal", "aim_pitch", "aim_yaw", "l_humerus", "l_radius", "l_handguard", "r_humerus", "r_radius", "r_handguard"]
         for arm in bpy.data.objects:
-            if arm.type == 'ARMATURE':
-                bpy.ops.object.mode_set(mode='POSE')
-                arm.select = True
-                bpy.ops.pose.select_all(action='DESELECT')
-                for pb in arm.pose.bones:
-                    if pb.name in badbones:
-                        arm.data.bones[pb.name].select = True
-                        bpy.ops.anim.keyframe_clear_v3d()
+            #if arm.type == 'ARMATURE':
+            bpy.ops.object.mode_set(mode='POSE')
+            arm.select = True
+            bpy.ops.pose.select_all(action='DESELECT')
+            for pb in arm.pose.bones:
+                if pb.name in badbones:
+                    arm.data.bones[pb.name].select = True
+                    print(pb.name)
+                    bpy.ops.anim.keyframe_clear_v3d()
         for obj in bpy.data.objects:
             if obj.type == 'ARMATURE':
                 bpy.ops.object.mode_set(mode='EDIT')
                 armature = obj.data
                 for bone in armature.edit_bones:
                     if bone.name in badbones: 
+                        print(bone.name)
                         armature.edit_bones.remove(bone)
         return {'FINISHED'}
 
