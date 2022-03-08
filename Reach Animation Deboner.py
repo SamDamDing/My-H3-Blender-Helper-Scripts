@@ -1,3 +1,6 @@
+"""
+COPY AND PASTE THIS INTO YOUR SCRIPTING TAB
+"""
 bl_info = {
     "name": "Halo Reach Deboner",
     "author": "MercyMoon",
@@ -57,16 +60,17 @@ class deboner(bpy.types.Operator):
     bl_label = "Remove Reach Bones"
     bl_description = 'Remove Reach Bones'
     def execute(self, context):
-        badbones = ["pedestal", "aim_pitch", "aim_yaw", "l_humerus", "l_radius", "l_handguard", "r_humerus", "r_radius", "r_handguard"] #You can modify these to whatever bones you need to remove
+        badbones = ["pedestal", "aim_pitch", "aim_yaw", "l_humerus", "l_radius", "l_handguard", "r_humerus", "r_radius", "r_handguard"]
         for arm in bpy.data.objects:
-            bpy.ops.object.mode_set(mode='POSE')
-            arm.select = True
-            bpy.ops.pose.select_all(action='DESELECT')
-            for pb in arm.pose.bones:
-                if pb.name in badbones:
-                    arm.data.bones[pb.name].select = True
-                    bpy.ops.anim.keyframe_clear_v3d()
-        for obj in bpy.context.scene.objects:
+            if arm.type == 'ARMATURE':
+                bpy.ops.object.mode_set(mode='POSE')
+                arm.select = True
+                bpy.ops.pose.select_all(action='DESELECT')
+                for pb in arm.pose.bones:
+                    if pb.name in badbones:
+                        arm.data.bones[pb.name].select = True
+                        bpy.ops.anim.keyframe_clear_v3d()
+        for obj in bpy.data.objects:
             if obj.type == 'ARMATURE':
                 bpy.ops.object.mode_set(mode='EDIT')
                 armature = obj.data
@@ -77,8 +81,8 @@ class deboner(bpy.types.Operator):
 
 class importboner(bpy.types.Operator):
     bl_idname = "reachdeboner.importboner"
-    bl_label = "Batch Debone and Export"
-    bl_description = 'Batch Debone and Export'
+    bl_label = "Reach Batch Importer"
+    bl_description = 'Reach Batch Importer'
     scn = bpy.context.scene
     def execute(self, context):
         from io_scene_halo.file_jma import import_jma
@@ -93,37 +97,53 @@ class importboner(bpy.types.Operator):
                 f = os.path.join(path_of_the_directory,files)
                 if os.path.isfile(f):
                     print(f)
-                    #This probably isn't best practice, but it works.
-                    importboner.filepath = f
-                    importboner.fix_parents = True
-                    importboner.game_version = 'halo3mcc'
-                    importboner.jms_path_a = ''
-                    importboner.jms_path_b = ''
-                    importboner.fix_rotations = False
-                    file_extension = pathlib.Path(f).suffix
-                    importboner.extension = file_extension
-                    importboner.extension_ce = file_extension
-                    importboner.extension_h2 = file_extension
-                    importboner.extension_h3 = file_extension
-                    importboner.jma_version = '16392'
-                    importboner.jma_version_ce = '16392'
-                    importboner.jma_version_h2 = '16395'
-                    importboner.jma_version_h3 = '16395'
-                    importboner.generate_checksum = True
-                    importboner.frame_rate_float= False
-                    importboner.biped_controller= False
-                    importboner.folder_structure= False
-                    importboner.scale_enum= False
-                    importboner.scale_float= False
-                    importboner.console= False
-                    importboner.custom_frame_rate= '30'
-                    file_jma.ImportJMA.execute(self, context)
-                    deboner.execute(self, context)
-                    bpy.ops.object.mode_set(mode='OBJECT')
-                    bpy.ops.object.select_all(action='DESELECT')
-                    bpy.ops.object.select_all(action='DESELECT')
-                    bpy.ops.object.delete()
-                    file_jma.ExportJMA.execute(self, context)
+                    try:
+                        importboner.filepath = f
+                        importboner.fix_parents = True
+                        importboner.game_version = 'halo3mcc'
+                        importboner.jms_path_a = ''
+                        importboner.jms_path_b = ''
+                        importboner.fix_rotations = False
+                        file_extension = pathlib.Path(f).suffix
+                        importboner.extension = file_extension
+                        importboner.extension_ce = file_extension
+                        importboner.extension_h2 = file_extension
+                        importboner.extension_h3 = file_extension
+                        importboner.jma_version = '16392'
+                        importboner.jma_version_ce = '16392'
+                        importboner.jma_version_h2 = '16395'
+                        importboner.jma_version_h3 = '16395'
+                        importboner.generate_checksum = True
+                        importboner.frame_rate_float= False
+                        importboner.biped_controller= False
+                        importboner.folder_structure= False
+                        importboner.scale_enum= False
+                        importboner.scale_float= False
+                        importboner.console= False
+                        importboner.custom_frame_rate= '30'
+                        print("Importing")
+                        try:
+                            file_jma.ImportJMA.execute(self, context)
+                        except:
+                            print("Importing failed")
+                            pass
+                        print("Deboning")
+                        try:
+                            deboner.execute(self, context)
+                        except:
+                            print("deboning failed")
+                            pass
+                        bpy.ops.object.mode_set(mode='OBJECT')
+                        bpy.ops.object.select_all(action='DESELECT')
+                        bpy.ops.object.delete()
+                        print("Exporting")
+                        try:
+                            file_jma.ExportJMA.execute(self, context)
+                        except:
+                            print("exporting failed")
+                            pass
+                    except:
+                        pass
             else:
                 continue
         return {'FINISHED'}
