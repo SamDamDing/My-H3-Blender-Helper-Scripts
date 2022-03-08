@@ -1,6 +1,3 @@
-"""
-COPY AND PASTE THIS INTO YOUR SCRIPTING TAB
-"""
 bl_info = {
     "name": "Halo Reach Deboner",
     "author": "MercyMoon",
@@ -61,24 +58,34 @@ class deboner(bpy.types.Operator):
     bl_description = 'Remove Reach Bones'
     def execute(self, context):
         badbones = ["pedestal", "aim_pitch", "aim_yaw", "l_humerus", "l_radius", "l_handguard", "r_humerus", "r_radius", "r_handguard"]
-        for arm in bpy.data.objects:
-            #if arm.type == 'ARMATURE':
-            bpy.ops.object.mode_set(mode='POSE')
-            arm.select = True
-            bpy.ops.pose.select_all(action='DESELECT')
-            for pb in arm.pose.bones:
-                if pb.name in badbones:
-                    arm.data.bones[pb.name].select = True
-                    print(pb.name)
-                    bpy.ops.anim.keyframe_clear_v3d()
-        for obj in bpy.data.objects:
-            if obj.type == 'ARMATURE':
-                bpy.ops.object.mode_set(mode='EDIT')
-                armature = obj.data
-                for bone in armature.edit_bones:
-                    if bone.name in badbones: 
-                        print(bone.name)
-                        armature.edit_bones.remove(bone)
+        try:
+            print("removing keyframes of bones")
+            for arm in bpy.data.objects:
+                #if arm.type == 'ARMATURE':
+                bpy.ops.object.mode_set(mode='POSE')
+                arm.select = True
+                bpy.ops.pose.select_all(action='DESELECT')
+                for pb in arm.pose.bones:
+                    if pb.name in badbones:
+                        arm.data.bones[pb.name].select = True
+                        print(pb.name)
+                        bpy.ops.anim.keyframe_clear_v3d()
+        except:
+            print("removing keyframes failed")
+            pass
+        try:
+            print("removing bones")
+            for obj in bpy.data.objects:
+                if obj.type == 'ARMATURE':
+                    bpy.ops.object.mode_set(mode='EDIT')
+                    armature = obj.data
+                    for bone in armature.edit_bones:
+                        if bone.name in badbones: 
+                            print(bone.name)
+                            armature.edit_bones.remove(bone)
+        except:
+                print("removing bones failed")
+                pass
         return {'FINISHED'}
 
 class importboner(bpy.types.Operator):
