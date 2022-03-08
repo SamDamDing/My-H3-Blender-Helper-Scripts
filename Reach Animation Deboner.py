@@ -77,8 +77,8 @@ class deboner(bpy.types.Operator):
 
 class importboner(bpy.types.Operator):
     bl_idname = "reachdeboner.importboner"
-    bl_label = "Reach import boner"
-    bl_description = 'Reach import boner'
+    bl_label = "Batch Debone and Export"
+    bl_description = 'Batch Debone and Export'
     scn = bpy.context.scene
     def execute(self, context):
         from io_scene_halo.file_jma import import_jma
