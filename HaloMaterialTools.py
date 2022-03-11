@@ -72,6 +72,17 @@ class DataPathFileSelector(bpy.types.Operator, ExportHelper):
         context.scene.my_addon.data_identifier = fdatadir
         return{'FINISHED'}
 
+def SetMaterialType(selected_objects, material_type):
+    for object in selected_objects: 
+        if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
+            for mat in object.data.materials:
+                mat.ass_jms.is_bm = True
+                if getattr(mat.ass_jms, material_type) == False:
+                    setattr(mat.ass_jms, material_type, True)
+                else:
+                    setattr(mat.ass_jms, material_type, False)
+    return {"FINISHED"}
+
 class EnableHaloMatProp(bpy.types.Operator):
     bl_idname = 'halomats.enablehalomatprop'
     bl_label = 'Toggle Properties'
@@ -85,382 +96,180 @@ class EnableHaloMatProp(bpy.types.Operator):
                     else:
                         mat.ass_jms.is_bm = False
         return {"FINISHED"}
-
+class TwoSided(bpy.types.Operator):
+    bl_idname = 'halomats.twosided'
+    bl_label = 'TwoSided'
+    bl_description = 'Makes the material Two Sided'
+    def execute(self, context):
+        return SetMaterialType(bpy.context.selected_objects, 'two_sided')
 
 class renderOnly(bpy.types.Operator):
     bl_idname = 'halomats.renderonly'
     bl_label = 'Render Only'
     bl_description = 'Makes the material Render Only'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.render_only == False:
-                        mat.ass_jms.render_only = True
-                    else:
-                        mat.ass_jms.render_only = False
-        return {"FINISHED"}
-    
-class TwoSided(bpy.types.Operator):
-    bl_idname = 'halomats.twosided'
-    bl_label = 'TwoSided'
-    bl_description = 'Makes the material Two Sided'
-    def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.two_sided == False:
-                        mat.ass_jms.two_sided = True
-                    else:
-                        mat.ass_jms.two_sided = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'render_only')
 
 class Transparent(bpy.types.Operator):
     bl_idname = 'halomats.transparent'
     bl_label = 'Transparent'
     bl_description = 'Makes the material Transparent'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.transparent_1_sided == False:
-                        mat.ass_jms.transparent_1_sided = True
-                    else:
-                        mat.ass_jms.transparent_1_sided = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'transparent_1_sided')
 
 class LargeCollideable(bpy.types.Operator):
     bl_idname = 'halomats.largecollideable'
     bl_label = 'LargeCollideable'
     bl_description = 'Makes the material a Large Collideable'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.sphere_collision_only == False:
-                        mat.ass_jms.sphere_collision_only = True
-                    else:
-                        mat.ass_jms.sphere_collision_only = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'sphere_collision_only')
 
 class FogPlane(bpy.types.Operator):
     bl_idname = 'halomats.fogplane'
     bl_label = 'FogPlane'
     bl_description = 'Makes the material a Fog Plane'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.fog_plane == False:
-                        mat.ass_jms.fog_plane = True
-                    else:
-                        mat.ass_jms.fog_plane = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'fog_plane')
 
 class Ladder(bpy.types.Operator):
     bl_idname = 'halomats.ladder'
     bl_label = 'ladder'
     bl_description = 'Makes the material a Ladder'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.ladder == False:
-                        mat.ass_jms.ladder = True
-                    else:
-                        mat.ass_jms.ladder = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'ladder')
 
 class collision_only(bpy.types.Operator):
     bl_idname = 'halomats.collision_only'
     bl_label = 'collision_only'
     bl_description = 'Makes the material Collision Only'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.collision_only == False:
-                        mat.ass_jms.collision_only = True
-                    else:
-                        mat.ass_jms.collision_only = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'collision_only')
 
 class breakable(bpy.types.Operator):
     bl_idname = 'halomats.breakable'
     bl_label = 'breakable'
     bl_description = 'Makes the material Breakable'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.breakable == False:
-                        mat.ass_jms.breakable = True
-                    else:
-                        mat.ass_jms.breakable = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'breakable')
 
 class ai_deafening(bpy.types.Operator):
     bl_idname = 'halomats.ai_deafening'
     bl_label = 'ai_deafening'
     bl_description = 'Makes the material a Fog Plane'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.ai_deafening == False:
-                        mat.ass_jms.ai_deafening = True
-                    else:
-                        mat.ass_jms.ai_deafening = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'ai_deafening')
 
 class portal_exact(bpy.types.Operator):
     bl_idname = 'halomats.portal_exact'
     bl_label = 'portal_exact'
     bl_description = 'Makes the material an Exact Portal'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.portal_exact == False:
-                        mat.ass_jms.portal_exact = True
-                    else:
-                        mat.ass_jms.portal_exact = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'portal_exact')
 
 class no_shadow(bpy.types.Operator):
     bl_idname = 'halomats.no_shadow'
     bl_label = 'no_shadow'
-    bl_description = 'Makes the material no_shadow'
+    bl_description = 'Makes the material No Shadow'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.no_shadow == False:
-                        mat.ass_jms.no_shadow = True
-                    else:
-                        mat.ass_jms.no_shadow = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'no_shadow')
 
 class shadow_only(bpy.types.Operator):
     bl_idname = 'halomats.shadow_only'
     bl_label = 'shadow_only'
-    bl_description = 'Makes the material shadow_only'
+    bl_description = 'Makes the material Shadow Only'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.shadow_only == False:
-                        mat.ass_jms.shadow_only = True
-                    else:
-                        mat.ass_jms.shadow_only = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'shadow_only')
 
 class lightmap_only(bpy.types.Operator):
     bl_idname = 'halomats.lightmap_only'
     bl_label = 'lightmap_only'
-    bl_description = 'Makes the material lightmap_only'
+    bl_description = 'Makes the material Lightmap Only'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.lightmap_only == False:
-                        mat.ass_jms.lightmap_only = True
-                    else:
-                        mat.ass_jms.lightmap_only = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'lightmap_only')
 
 class precise(bpy.types.Operator):
     bl_idname = 'halomats.precise'
     bl_label = 'precise'
-    bl_description = 'Makes the material precise'
+    bl_description = 'Makes the material Precise'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.precise == False:
-                        mat.ass_jms.precise = True
-                    else:
-                        mat.ass_jms.precise = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'precise')
 
 class conveyor(bpy.types.Operator):
     bl_idname = 'halomats.conveyor'
     bl_label = 'conveyor'
-    bl_description = 'Makes the material conveyor'
+    bl_description = 'Makes the material Conveyor'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.conveyor == False:
-                        mat.ass_jms.conveyor = True
-                    else:
-                        mat.ass_jms.conveyor = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'conveyor')
 
 class portal_1_way(bpy.types.Operator):
     bl_idname = 'halomats.portal_1_way'
     bl_label = 'portal_1_way'
-    bl_description = 'Makes the material portal_1_way'
+    bl_description = 'Makes the material a 1 Way Portal'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.portal_1_way == False:
-                        mat.ass_jms.portal_1_way = True
-                    else:
-                        mat.ass_jms.portal_1_way = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'portal_1_way')
 
 class portal_door(bpy.types.Operator):
     bl_idname = 'halomats.portal_door'
     bl_label = 'portal_door'
-    bl_description = 'Makes the material portal_door'
+    bl_description = 'Makes the material a Portal Door'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.portal_door == False:
-                        mat.ass_jms.portal_door = True
-                    else:
-                        mat.ass_jms.portal_door = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'portal_door')
 
 class portal_vis_blocker(bpy.types.Operator):
     bl_idname = 'halomats.portal_vis_blocker'
     bl_label = 'portal_vis_blocker'
-    bl_description = 'Makes the material portal_vis_blocker'
+    bl_description = 'Makes the material a Portal Visibility Blocker'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.portal_vis_blocker == False:
-                        mat.ass_jms.portal_vis_blocker = True
-                    else:
-                        mat.ass_jms.portal_vis_blocker = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'portal_vis_blocker')
 
 class ignored_by_lightmaps(bpy.types.Operator):
     bl_idname = 'halomats.ignored_by_lightmaps'
     bl_label = 'ignored_by_lightmaps'
-    bl_description = 'Makes the material ignored_by_lightmaps'
+    bl_description = 'Makes the material Ignored By Lightmaps'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.ignored_by_lightmaps == False:
-                        mat.ass_jms.ignored_by_lightmaps = True
-                    else:
-                        mat.ass_jms.ignored_by_lightmaps = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'ignored_by_lightmaps')
 
 class blocks_sound(bpy.types.Operator):
     bl_idname = 'halomats.blocks_sound'
     bl_label = 'blocks_sound'
-    bl_description = 'Makes the material blocks_sound'
+    bl_description = 'Makes the material Block Sounds'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.blocks_sound == False:
-                        mat.ass_jms.blocks_sound = True
-                    else:
-                        mat.ass_jms.blocks_sound = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'blocks_sound')
 
 class decal_offset(bpy.types.Operator):
     bl_idname = 'halomats.decal_offset'
     bl_label = 'decal_offset'
-    bl_description = 'Makes the material decal_offset'
+    bl_description = 'Makes the material a Decal Offset'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.decal_offset == False:
-                        mat.ass_jms.decal_offset = True
-                    else:
-                        mat.ass_jms.decal_offset = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'decal_offset')
 
 class water_surface(bpy.types.Operator):
     bl_idname = 'halomats.water_surface'
     bl_label = 'water_surface'
-    bl_description = 'Makes the material water_surface'
+    bl_description = 'Makes the material a Water Surface'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.water_surface == False:
-                        mat.ass_jms.water_surface = True
-                    else:
-                        mat.ass_jms.water_surface = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'water_surface')
 
 class slip_surface(bpy.types.Operator):
     bl_idname = 'halomats.slip_surface'
     bl_label = 'slip_surface'
-    bl_description = 'Makes the material slip_surface'
+    bl_description = 'Makes the material a Slip Surface'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.slip_surface == False:
-                        mat.ass_jms.slip_surface = True
-                    else:
-                        mat.ass_jms.slip_surface = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'slip_surface')
 
 class group_transparents_by_plane(bpy.types.Operator):
     bl_idname = 'halomats.group_transparents_by_plane'
     bl_label = 'group_transparents_by_plane'
-    bl_description = 'Makes the material group_transparents_by_plane'
+    bl_description = 'Makes the material Group Transparents By Plane'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.group_transparents_by_plane == False:
-                        mat.ass_jms.group_transparents_by_plane = True
-                    else:
-                        mat.ass_jms.group_transparents_by_plane = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'group_transparents_by_plane')
 
 class transparent_2_sided(bpy.types.Operator):
     bl_idname = 'halomats.transparent_2_sided'
     bl_label = 'transparent_2_sided'
-    bl_description = 'Makes the material transparent_2_sided'
+    bl_description = 'Makes the material Transparent 2 Sided'
     def execute(self, context):
-        for object in bpy.context.selected_objects: 
-            if object.type in {'MESH','CURVE', 'SURFACE','META', 'FONT'}:
-                for mat in bpy.data.materials:
-                    mat.ass_jms.is_bm = True
-                    if mat.ass_jms.transparent_2_sided == False:
-                        mat.ass_jms.transparent_2_sided = True
-                    else:
-                        mat.ass_jms.transparent_2_sided = False
-        return {"FINISHED"}
+        return SetMaterialType(bpy.context.selected_objects, 'transparent_2_sided')
 
 class makeDupesInstance(bpy.types.Operator):
     bl_idname = 'halomats.makedupesinstance'
